@@ -1,0 +1,79 @@
+/*-------------------------------*\
+ # CONSTANTS
+\*-------------------------------*/
+
+// Primary colors
+// white
+$white-lightest: #F8FAFF;
+$white-light: #EFF6FF;
+$white-normal: #E8F2FD;
+$white-dark: #DAE7F4;
+$white-darkest: #C9D9E8;
+
+// grey
+$grey-lightest: #e0dede;
+$grey-light: #afafaf;
+$grey-normal: #868686;
+$grey-dark: #535353;
+$grey-darkest: #2c2c2c;
+
+// lightblue
+$lightblue-lightest: #EDFAFF;
+$lightblue-light: #CAEDFF;
+$lightblue-normal: #9CDBFF;
+$lightblue-dark: #6FC8FE;
+$lightblue-darkest: #49ABEB;
+
+// blue
+$blue-lightest: #2788C9;
+$blue-light: #1575B7;
+$blue-normal: #0463A5;
+$blue-dark: #00518B;
+$blue-darkest: #013A63;
+
+// green
+$green-lightest: #D7F8AE;
+$green-light: #B0E67B;
+$green-normal: #89D549;
+$green-dark: #4EA72C;
+$green-darkest: #137A0F;
+
+// red
+$red-lightest: #FFD4D6;
+$red-light: #FFAFB3;
+$red-normal: #FB7B82;
+$red-dark: #F04C54;
+$red-darkest: #C11D25;
+
+// yellow
+$yellow-lightest: #FFF4C7;
+$yellow-light: #FFE599;
+$yellow-normal: #FFCE4E;
+$yellow-dark: #F9AD24;
+$yellow-darkest: #AC5A03;
+
+// purple
+$purple-lightest: #E5D9F8;
+$purple-light: #D0C0F1;
+$purple-normal: #BAA9E3;
+$purple-dark: #8A72C9;
+$purple-darkest: #5C49A1;
+
+$pearl: #FFFFFF;
+
+// data colors
+$data-1: $blue-lightest;
+$data-2: $yellow-dark;
+$data-3: $red-dark;
+$data-4: $purple-normal;
+$data-5: #94E1E3;
+$data-6: #9A0165;
+$data-7: $red-light;
+$data-8: $grey-normal;
+$data-9: $green-normal;
+$data-10: $blue-dark;
+$data-11: #A37530;
+$data-12: $yellow-light;
+
+$accent-dark: #334F67;
+$accent-light: $yellow-dark;
