@@ -13,7 +13,10 @@
       <div v-if="showLinks" class="links">
         <p>{{"<"}}</p>
         <a v-for="(link, index) in links" :key="index" :href="link.href" class="link-wrapper">
-          <img :src="link.logo" alt="" class="link-img accent-svg-light">
+          <img v-if="link.name == 'LinkedIn'" src="../assets/linkedin.svg" alt="" class="link-img accent-svg-light">
+          <img v-if="link.name == 'Github'" src="../assets/github.svg" alt="" class="link-img accent-svg-light">
+          <img v-if="link.name == 'Email'" src="../assets/mail.svg" alt="" class="link-img accent-svg-light">
+          <img v-if="link.name == 'Phone'" src="../assets/phone.svg" alt="" class="link-img accent-svg-light">
           <div class="link-text">{{link.text}}</div>
         </a>
         <p>{{"/>"}}</p>
@@ -33,25 +36,21 @@ export default {
       links: [
         {
           name: "LinkedIn",
-          logo: "src/assets/icons/linkedin.svg",
           href: "https://www.linkedin.com/in/ruben-wambacq/",
           text: "/in/ruben-wambacq"
         },
         {
           name: "Github",
-          logo: "src/assets/icons/github.svg",
           href: "https://github.com/rwambacq",
           text: "rwambacq"
         },
         {
           name: "Email",
-          logo: "src/assets/icons/mail.svg",
           href: "mailto:ruben.wambacq@gmail.com",
           text: "ruben.wambacq@gmail.com"
         },
         {
           name: "Phone",
-          logo: "src/assets/icons/phone.svg",
           href: "tel:+32471325437",
           text: "+32 471 32 54 37"
         }

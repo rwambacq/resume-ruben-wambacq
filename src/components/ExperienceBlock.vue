@@ -22,7 +22,7 @@
           <p class="experience-duration">{{experience.duration}}</p>
           <p v-if="experience.description !== ''" class="experience-description" v-html="experience.description"></p>
         </div>
-        <img v-if="experience.description" src="../assets/icons/chevron-right.svg" alt="" class="chevron-right"/>
+        <img v-if="experience.description" src="../assets/chevron-right.svg" alt="" class="chevron-right"/>
       </div>
     </div>
   </div>
