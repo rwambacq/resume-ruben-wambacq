@@ -71,7 +71,6 @@ export default {
   position: fixed;
   left: 1rem;
   top: 50%;
-  bottom: 50%;
   transform: translateY(-50%);
 
   display: flex;

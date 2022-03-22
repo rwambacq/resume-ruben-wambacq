@@ -123,5 +123,9 @@ h2 {
   text-align: left;
   font-size: 1.7rem;
   font-weight: 500;
+
+  width: 100%;
+  text-align: center;
+  padding: 2rem 0 0 0;
 }
 </style>
