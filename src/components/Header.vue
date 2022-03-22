@@ -77,7 +77,7 @@ export default {
 <style lang="scss" scoped>
 .header-wrapper {
   width: 100%;
-  height: 80vh;
+  height: 60vh;
 
   display: flex;
   flex-flow: row nowrap;
@@ -186,8 +186,9 @@ export default {
   padding: 1rem;
 
 
-  background: $grey-dark;
-  color: white;
+  background: $grey-darkest;
+  color: #61FFD7;
+  
 
   border-radius: 4px;
 }
@@ -195,7 +196,7 @@ export default {
 .bottom-divider {
   background: $accent-light;
   height: 1px;
-  width: calc(100vw - 200px);
+  width: calc(100vw - 600px);
   position: absolute;
   bottom: 0;
   left: 50%;

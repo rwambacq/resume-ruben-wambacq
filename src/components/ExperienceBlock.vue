@@ -1,7 +1,13 @@
 <template>
   <div class="experience-wrapper">
     <h1>Experience</h1>
-    <div class="experience-list">
+    <div :class="{
+        'experience-list': true,
+        hidden: !visible,
+        visible,
+      }" 
+      v-visible="visibilityChanged"
+    >
       <div v-for="(experience, index) in experiences" :key="index" class="experience">
         <div class="experience-dot"></div>
         <div class="experience-info">
@@ -14,8 +20,9 @@
             <p v-else>{{experience.location}}</p>
           </div>
           <p class="experience-duration">{{experience.duration}}</p>
-          <P v-if="experience.description !== ''" class="experience-description">{{experience.description}}</p>
+          <p v-if="experience.description !== ''" class="experience-description" v-html="experience.description"></p>
         </div>
+        <img v-if="experience.description" src="../assets/icons/chevron-right.svg" alt="" class="chevron-right"/>
       </div>
     </div>
   </div>
@@ -40,7 +47,7 @@ export default {
             location: "IDLab imec Ghent",
             location_url: "https://idlab.technology/",
             duration: "July 2020 - December 2020",
-            description: "A summer job that turned into a part-time job in which the application UnSHACLed had to be developed to go along with the <a href='http://www.semantic-web-journal.net/content/visual-notations-viewing-rdf-constraints-unshacled'>research paper</a> of PhD student Sven Lieber. This application uses Vue.js along with Konva.js to draw and create interactive representations of SHACL constraint graphs."
+            description: "A summer job that turned into a part-time job in which the application UnSHACLed had to be developed to go along with the <a href='http://www.semantic-web-journal.net/content/visual-notations-viewing-rdf-constraints-unshacled' style='color: #61FFD7; text-decoration: none;'>research paper</a> of PhD student Sven Lieber. This application uses Vue.js along with Konva.js to draw and create interactive representations of SHACL constraint graphs."
           },
           {
             title: "Full stack developer",
@@ -50,13 +57,20 @@ export default {
             description: "In cooperation with Engie, a prototype application was developed here to detect emotions of callcenter employees and customers in their voice. This was made possible using an LSTM machine learning model, developed in Keras (Python ML framework) and using a frontend created in React to display the results."
           },
           {
-            title: "Sales, customer relations, catering &amp administration",
+            title: "Sales, customer relations, catering & administration",
             location: "Several non-computer science related companies",
             location_url: "",
             duration: "Summers 2014 - 2018",
             description: ""
           }
-        ]
+        ],
+        visible: false
+    }
+  },
+  methods: {
+    visibilityChanged(isVisible, entry) {
+      this.visible = isVisible;
+      // console.log(isVisible);
     }
   }
 }
@@ -76,6 +90,14 @@ export default {
     font-weight: 500;
   }
 
+  .hidden {
+    opacity: 0;
+  }
+
+  .visible {
+    opacity: 1;
+  }
+
   .experience-list {
     text-align: left;
     width: fit-content;
@@ -84,8 +106,17 @@ export default {
     flex-flow: column wrap;
     gap: 2rem;
     padding: 0 2rem;
+    transition: opacity 2s ease;
 
     border-left: 1px solid $accent-light;
+  }
+
+  .chevron-right {
+    position: absolute;
+    right: 0;
+    top: 1.5rem;
+    filter: invert(100%);
+    transition: transform .5s ease;
   }
 
   .experience {
@@ -93,6 +124,7 @@ export default {
     display: flex;
     align-items: center;
     gap: 2rem;
+    position: relative;
 
     &-dot {
       width: .5rem;
@@ -136,9 +168,13 @@ export default {
       padding: .5rem 1rem;
     }
 
+    &:hover .chevron-right {
+      transform: rotate(90deg);
+    }
+
     & a {
-      color: $grey-normal;
-      text-underline-offset: 2px;
+      color: #61FFD7;
+      text-decoration: none;
     }
   }
 </style>
