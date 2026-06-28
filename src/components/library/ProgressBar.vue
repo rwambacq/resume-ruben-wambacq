@@ -3,8 +3,8 @@
     <div class="progress-bar-head">
       <span v-if="name !== ''" class="progress-bar-name">{{ name }}</span>
     </div>
-    <div class="progress-bar-track" v-visible="visibilityChanged">
-      <div class="progress-bar-fill" :style="progressBarFill"></div>
+    <div class="progress-bar-track" v-reveal.bare="visibilityChanged">
+      <div class="progress-bar-fill" :class="{ 'is-filled': canAnimate }" :style="progressBarFill"></div>
     </div>
   </div>
 </template>
@@ -57,7 +57,11 @@ function visibilityChanged(isVisible) {
     height: 100%;
     border-radius: 999px;
     background: linear-gradient(90deg, var(--accent), var(--accent-strong));
-    transition: width 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: width 1.2s var(--ease-cinematic), box-shadow 1.2s ease;
+
+    &.is-filled {
+      box-shadow: 0 0 14px var(--accent-soft);
+    }
   }
 }
 </style>

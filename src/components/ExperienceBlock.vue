@@ -1,15 +1,16 @@
 <template>
   <section class="experience">
-    <p class="section-label">{{ t("experience.label") }}</p>
-    <div
-      :class="{ 'experience-timeline': true, visible }"
-      v-visible="visibilityChanged"
-    >
+    <p class="section-label" data-num="02">{{ t("experience.label") }}</p>
+    <div class="experience-timeline" ref="timelineRef">
+      <span class="experience-line" aria-hidden="true">
+        <span class="experience-line-fill" :style="{ transform: `scaleY(${lineProgress})` }"></span>
+      </span>
       <div
         v-for="(experience, index) in experiences"
         :key="index"
         class="experience-item"
-        :style="{ '--i': index }"
+        v-reveal
+        :style="{ '--reveal-delay': `${index * 0.08}s` }"
       >
         <span class="experience-dot"></span>
         <div class="experience-head">
@@ -38,6 +39,8 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { useElementBounding, useWindowSize } from "@vueuse/core";
+import { useReducedMotion } from "../composables/useReducedMotion";
 
 const { t, tm, rt } = useI18n({ useScope: "global" });
 
@@ -58,11 +61,17 @@ const experiences = computed(() =>
   }))
 );
 
-const visible = ref(false);
+const timelineRef = ref(null);
+const { top, height } = useElementBounding(timelineRef);
+const { height: viewportHeight } = useWindowSize();
+const { reducedMotion } = useReducedMotion();
 
-function visibilityChanged(isVisible) {
-  if (isVisible) visible.value = true;
-}
+const lineProgress = computed(() => {
+  if (reducedMotion.value) return 1;
+  if (!height.value) return 0;
+  const anchor = viewportHeight.value * 0.55;
+  return Math.min(1, Math.max(0, (anchor - top.value) / height.value));
+});
 </script>
 
 <style lang="scss" scoped>
@@ -74,7 +83,24 @@ function visibilityChanged(isVisible) {
   &-timeline {
     position: relative;
     padding-left: 1.75rem;
-    border-left: 2px solid var(--border);
+  }
+
+  &-line {
+    position: absolute;
+    left: 0;
+    top: 0.35rem;
+    bottom: 0.35rem;
+    width: 2px;
+    background: var(--border);
+    overflow: hidden;
+
+    &-fill {
+      position: absolute;
+      inset: 0;
+      transform-origin: top;
+      background: linear-gradient(180deg, var(--accent), var(--accent-strong));
+      box-shadow: 0 0 10px var(--accent-soft);
+    }
   }
 
   &-item {
@@ -82,23 +108,24 @@ function visibilityChanged(isVisible) {
     padding-bottom: 2.5rem;
 
     &:last-child { padding-bottom: 0; }
-
-    .visible & {
-      animation: fade-up 0.6s ease both;
-      animation-delay: calc(var(--i) * 0.1s);
-    }
   }
 
   &-dot {
     position: absolute;
-    left: calc(-1.75rem - 7px);
+    left: calc(-1.75rem - 6px);
     top: 0.35rem;
     width: 12px;
     height: 12px;
     border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--border-strong);
+    transition: border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+  }
+
+  &-item.reveal--in &-dot {
     background: var(--bg);
-    border: 2px solid var(--accent);
-    box-shadow: 0 0 0 4px var(--accent-soft);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft), 0 0 12px var(--accent-soft);
   }
 
   &-head {
@@ -141,10 +168,5 @@ function visibilityChanged(isVisible) {
       text-underline-offset: 2px;
     }
   }
-}
-
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 </style>

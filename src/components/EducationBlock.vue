@@ -1,12 +1,20 @@
 <template>
   <section class="education">
-    <p class="section-label">{{ t("education.label") }}</p>
+    <p class="section-label" data-num="01">{{ t("education.label") }}</p>
     <div class="education-grid">
-      <div v-for="(item, index) in tm('education.items')" :key="index" class="education-card">
-        <p class="education-duration">{{ rt(item.duration) }}</p>
-        <h3 class="education-kind">{{ rt(item.kind) }}</h3>
-        <p class="education-major">{{ rt(item.major) }}</p>
-        <p class="education-location">{{ rt(item.location) }}</p>
+      <div
+        v-for="(item, index) in tm('education.items')"
+        :key="index"
+        class="education-cell"
+        v-reveal
+        :style="{ '--reveal-delay': `${index * 0.1}s` }"
+      >
+        <div class="education-card">
+          <p class="education-duration">{{ rt(item.duration) }}</p>
+          <h3 class="education-kind">{{ rt(item.kind) }}</h3>
+          <p class="education-major">{{ rt(item.major) }}</p>
+          <p class="education-location">{{ rt(item.location) }}</p>
+        </div>
       </div>
     </div>
   </section>
@@ -32,12 +40,11 @@ const { t, tm, rt } = useI18n({ useScope: "global" });
 
   &-card {
     @include card;
+    height: 100%;
     padding: 1.6rem;
-    transition: transform 0.2s ease, border-color 0.2s ease;
 
     &:hover {
-      transform: translateY(-3px);
-      border-color: var(--accent);
+      @include card-hover;
     }
   }
 

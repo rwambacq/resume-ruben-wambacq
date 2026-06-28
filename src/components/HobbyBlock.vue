@@ -1,10 +1,18 @@
 <template>
   <section class="hobbies">
-    <p class="section-label">{{ t("hobbies.label") }}</p>
+    <p class="section-label" data-num="04">{{ t("hobbies.label") }}</p>
     <div class="hobbies-list">
-      <span v-for="(hobby, index) in hobbies" :key="index" class="hobbies-item">
-        <span class="hobbies-icon" v-html="hobby.icon"></span>
-        {{ hobby.name }}
+      <span
+        v-for="(hobby, index) in hobbies"
+        :key="index"
+        class="hobbies-cell"
+        v-reveal
+        :style="{ '--reveal-delay': `${index * 0.07}s` }"
+      >
+        <span class="hobbies-item">
+          <span class="hobbies-icon" v-html="hobby.icon"></span>
+          {{ hobby.name }}
+        </span>
       </span>
     </div>
   </section>
@@ -38,6 +46,10 @@ const hobbies = computed(() =>
     gap: 0.75rem;
   }
 
+  &-cell {
+    display: inline-flex;
+  }
+
   &-item {
     display: inline-flex;
     align-items: center;
@@ -50,11 +62,12 @@ const hobbies = computed(() =>
     font-size: 0.92rem;
     font-weight: 500;
     color: var(--text);
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    transition: transform 0.3s var(--ease-cinematic), border-color 0.3s ease, box-shadow 0.3s ease;
 
     &:hover {
-      transform: translateY(-3px);
-      border-color: var(--accent);
+      transform: translateY(-4px);
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+      box-shadow: var(--glow), var(--shadow);
     }
   }
 

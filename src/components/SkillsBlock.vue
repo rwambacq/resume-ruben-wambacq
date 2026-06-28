@@ -1,19 +1,35 @@
 <template>
   <section class="skills">
-    <p class="section-label">{{ t("skills.label") }}</p>
+    <p class="section-label" data-num="03">{{ t("skills.label") }}</p>
 
     <div class="skills-grid">
       <div class="skills-group">
         <h3 class="skills-group-title">{{ t("skills.proficientTitle") }}</h3>
         <div class="skills-tags">
-          <span v-for="(p, i) in tm('skills.proficiencies')" :key="i" class="skills-tag skills-tag--accent">{{ rt(p) }}</span>
+          <span
+            v-for="(p, i) in tm('skills.proficiencies')"
+            :key="i"
+            class="skills-cell"
+            v-reveal
+            :style="{ '--reveal-delay': `${i * 0.05}s` }"
+          >
+            <span class="skills-tag skills-tag--accent">{{ rt(p) }}</span>
+          </span>
         </div>
       </div>
 
       <div class="skills-group">
         <h3 class="skills-group-title">{{ t("skills.experienceTitle") }}</h3>
         <div class="skills-tags">
-          <span v-for="(e, i) in tm('skills.experience')" :key="i" class="skills-tag">{{ rt(e) }}</span>
+          <span
+            v-for="(e, i) in tm('skills.experience')"
+            :key="i"
+            class="skills-cell"
+            v-reveal
+            :style="{ '--reveal-delay': `${i * 0.05}s` }"
+          >
+            <span class="skills-tag">{{ rt(e) }}</span>
+          </span>
         </div>
       </div>
     </div>
@@ -76,6 +92,10 @@ const languages = computed(() =>
     gap: 0.55rem;
   }
 
+  &-cell {
+    display: inline-flex;
+  }
+
   &-tag {
     padding: 0.4rem 0.85rem;
     border-radius: 999px;
@@ -84,17 +104,23 @@ const languages = computed(() =>
     background: var(--surface-2);
     border: 1px solid var(--border);
     color: var(--text-muted);
-    transition: all 0.2s ease;
+    transition: color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s var(--ease-cinematic);
 
     &:hover {
       color: var(--text);
-      border-color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+      box-shadow: var(--glow);
+      transform: translateY(-2px);
     }
 
     &--accent {
       background: var(--accent-soft);
       border-color: transparent;
       color: var(--accent-strong);
+
+      &:hover {
+        color: var(--accent-strong);
+      }
     }
   }
 

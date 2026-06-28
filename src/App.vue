@@ -1,6 +1,10 @@
 <template>
   <div class="app">
-    <nav class="nav" ref="navRoot">
+    <ScrollProgress />
+    <Spotlight />
+    <GrainOverlay />
+
+    <nav class="nav" :class="{ 'nav--scrolled': scrolled }" ref="navRoot">
       <div class="nav-inner">
         <span class="nav-brand" @click="scrollToTop">RW</span>
         <div class="nav-links">
@@ -65,12 +69,17 @@
 </template>
 
 <script setup>
+import Lenis from "lenis";
+
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { useI18n } from "vue-i18n";
+import { useWindowScroll } from "@vueuse/core";
 import { useAppStore } from "./stores/app";
+import { useReducedMotion } from "./composables/useReducedMotion";
 
 import Button from "./components/library/Button.vue";
 import Dropdown from "./components/library/Dropdown.vue";
+
 import Header from "./components/Header.vue";
 import EducationBlock from "./components/EducationBlock.vue";
 import ExperienceBlock from "./components/ExperienceBlock.vue";
@@ -78,8 +87,16 @@ import SkillsBlock from "./components/SkillsBlock.vue";
 import HobbyBlock from "./components/HobbyBlock.vue";
 import QuotesBlock from "./components/QuotesBlock.vue";
 
+import ScrollProgress from "./components/effects/ScrollProgress.vue";
+import Spotlight from "./components/effects/Spotlight.vue";
+import GrainOverlay from "./components/effects/GrainOverlay.vue";
+
 const { t } = useI18n({ useScope: "global" });
 const app = useAppStore();
+const { reducedMotion } = useReducedMotion();
+
+const { y: scrollY } = useWindowScroll();
+const scrolled = computed(() => scrollY.value > 24);
 
 const blocks = [
   { key: "education" },
@@ -99,6 +116,9 @@ const blockRefs = { education, experience, skills, hobbies, references };
 
 const navRoot = ref(null);
 const mobileMenuOpen = ref(false);
+
+let lenis = null;
+let rafId = null;
 
 function handleClickOutside(event) {
   if (
@@ -122,20 +142,39 @@ onMounted(() => {
   app.initTheme();
   app.initLocale();
   document.addEventListener("click", handleClickOutside);
+
+  if (!reducedMotion.value) {
+    lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+    const raf = (time) => {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    };
+    rafId = requestAnimationFrame(raf);
+  }
 });
 
-onBeforeUnmount(() =>
-  document.removeEventListener("click", handleClickOutside)
-);
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside);
+  if (rafId) cancelAnimationFrame(rafId);
+  if (lenis) lenis.destroy();
+});
 
 function scrollToBlock(key) {
   mobileMenuOpen.value = false;
   const element = blockRefs[key].value.$el;
-  element.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (lenis) {
+    lenis.scrollTo(element, { offset: -50 });
+  } else {
+    element.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 }
 
 function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  if (lenis) {
+    lenis.scrollTo(0);
+  } else {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 }
 </script>
 
@@ -149,9 +188,17 @@ function scrollToTop() {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: color-mix(in srgb, var(--bg) 80%, transparent);
-  backdrop-filter: saturate(180%) blur(12px);
-  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+  backdrop-filter: saturate(180%) blur(8px);
+  border-bottom: 1px solid transparent;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+
+  &--scrolled {
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: saturate(180%) blur(14px);
+    border-bottom-color: var(--border);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+  }
 
   &-inner {
     max-width: 880px;
@@ -164,6 +211,7 @@ function scrollToTop() {
   }
 
   &-brand {
+    display: inline-block;
     font-weight: 700;
     font-size: 1.05rem;
     letter-spacing: 0.04em;

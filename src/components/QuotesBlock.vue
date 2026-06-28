@@ -1,22 +1,26 @@
 <template>
   <section class="quotes">
-    <p class="section-label">{{ t("references.label") }}</p>
+    <p class="section-label" data-num="05">{{ t("references.label") }}</p>
     <div class="quotes-grid">
-      <figure
+      <div
         v-for="(reference, index) in references"
         :key="index"
-        class="quotes-card"
+        class="quotes-cell"
+        v-reveal
+        :style="{ '--reveal-delay': `${index * 0.12}s` }"
       >
-        <span class="quotes-mark">&ldquo;</span>
-        <blockquote class="quotes-text">{{ reference.quote }}</blockquote>
-        <figcaption class="quotes-author">
-          <span class="quotes-author-avatar">{{ initials(reference.person) }}</span>
-          <span class="quotes-author-meta">
-            <span class="quotes-author-name">{{ reference.person }}</span>
-            <span class="quotes-author-title" v-html="reference.title"></span>
-          </span>
-        </figcaption>
-      </figure>
+        <figure class="quotes-card">
+          <span class="quotes-mark" :style="markStyle">&ldquo;</span>
+          <blockquote class="quotes-text">{{ reference.quote }}</blockquote>
+          <figcaption class="quotes-author">
+            <span class="quotes-author-avatar">{{ initials(reference.person) }}</span>
+            <span class="quotes-author-meta">
+              <span class="quotes-author-name">{{ reference.person }}</span>
+              <span class="quotes-author-title" v-html="reference.title"></span>
+            </span>
+          </figcaption>
+        </figure>
+      </div>
     </div>
   </section>
 </template>
@@ -24,8 +28,21 @@
 <script setup>
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { useMouse, useWindowSize } from "@vueuse/core";
+import { useReducedMotion } from "../composables/useReducedMotion";
 
 const { t, tm, rt } = useI18n({ useScope: "global" });
+
+const { x, y } = useMouse({ type: "client" });
+const { width, height } = useWindowSize();
+const { reducedMotion, finePointer } = useReducedMotion();
+
+const markStyle = computed(() => {
+  if (reducedMotion.value || !finePointer.value) return {};
+  const dx = (x.value / width.value - 0.5) * 16;
+  const dy = (y.value / height.value - 0.5) * 16;
+  return { transform: `translate3d(${dx}px, ${dy}px, 0)` };
+});
 
 const people = ["Charles Boutens", "Rutger Bevers"];
 
@@ -58,21 +75,33 @@ function initials(name) {
     gap: 1.5rem;
   }
 
+  &-cell {
+    display: flex;
+  }
+
   &-card {
     @include card;
     position: relative;
+    width: 100%;
     padding: 2rem 1.75rem 1.75rem;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+
+    &:hover {
+      @include card-hover;
+    }
   }
 
   &-mark {
-    font-size: 3rem;
-    line-height: 1;
+    display: inline-block;
+    font-size: 4.5rem;
+    line-height: 0.7;
     font-weight: 700;
     color: var(--accent);
-    opacity: 0.35;
-    margin-bottom: 0.25rem;
+    opacity: 0.3;
+    margin-bottom: 0.4rem;
+    will-change: transform;
   }
 
   &-text {
