@@ -1,32 +1,21 @@
 <template>
   <section class="education">
-    <p class="section-label">Education</p>
+    <p class="section-label">{{ t("education.label") }}</p>
     <div class="education-grid">
-      <div v-for="(item, index) in items" :key="index" class="education-card">
-        <p class="education-duration">{{ item.duration }}</p>
-        <h3 class="education-kind">{{ item.kind }}</h3>
-        <p class="education-major">{{ item.major }}</p>
-        <p class="education-location">{{ item.location }}</p>
+      <div v-for="(item, index) in tm('education.items')" :key="index" class="education-card">
+        <p class="education-duration">{{ rt(item.duration) }}</p>
+        <h3 class="education-kind">{{ rt(item.kind) }}</h3>
+        <p class="education-major">{{ rt(item.major) }}</p>
+        <p class="education-location">{{ rt(item.location) }}</p>
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
-const items = [
-  {
-    kind: "Bachelor of Science",
-    major: "Informatics",
-    location: "Ghent University",
-    duration: "2016 — 2020",
-  },
-  {
-    kind: "Master of Science",
-    major: "Informatics",
-    location: "Ghent University",
-    duration: "2020 — 2022",
-  },
-];
+import { useI18n } from "vue-i18n";
+
+const { t, tm, rt } = useI18n({ useScope: "global" });
 </script>
 
 <style lang="scss" scoped>

@@ -1,6 +1,6 @@
 <template>
   <section class="hobbies">
-    <p class="section-label">Hobbies</p>
+    <p class="section-label">{{ t("hobbies.label") }}</p>
     <div class="hobbies-list">
       <span v-for="(hobby, index) in hobbies" :key="index" class="hobbies-item">
         <span class="hobbies-icon" v-html="hobby.icon"></span>
@@ -11,13 +11,19 @@
 </template>
 
 <script setup>
-const hobbies = [
-  { name: "Woodworking", icon: "🪚" },
-  { name: "Cooking", icon: "🍳" },
-  { name: "Drawing", icon: "✏️" },
-  { name: "Boardgames", icon: "🎲" },
-  { name: "Video games", icon: "🎮" },
-];
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { t, tm, rt } = useI18n({ useScope: "global" });
+
+const icons = ["🪚", "🍳", "✏️", "🎲", "🎮"];
+
+const hobbies = computed(() =>
+  tm("hobbies.items").map((name, index) => ({
+    name: rt(name),
+    icon: icons[index],
+  }))
+);
 </script>
 
 <style lang="scss" scoped>

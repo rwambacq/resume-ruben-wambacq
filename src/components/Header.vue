@@ -9,19 +9,19 @@
         />
         <span class="hero-status">
           <span class="hero-status-dot"></span>
-          Available for work
+          {{ t("header.status") }}
         </span>
       </div>
 
       <div class="hero-intro">
-        <p class="hero-greeting">Hi there, I'm</p>
-        <h1 class="hero-name">Ruben Wambacq</h1>
-        <p class="hero-role">Senior Front-end Developer</p>
+        <p class="hero-greeting">{{ t("header.greeting") }}</p>
+        <h1 class="hero-name">{{ t("header.name") }}</h1>
+        <p class="hero-role">{{ t("header.role") }}</p>
         <p class="hero-tagline top">
-          I build clean, thoughtful web interfaces with an eye for detail
+          {{ t("header.taglineTop") }}
         </p>
         <p class="hero-tagline">
-          Currently crafting the product experience at uman.ai.
+          {{ t("header.taglineBottom") }}
         </p>
 
         <div class="hero-links">
@@ -35,7 +35,7 @@
             :aria-label="link.name"
           >
             <span class="hero-link-icon" v-html="link.icon"></span>
-            <span class="hero-link-label">{{ link.text }}</span>
+            <span class="hero-link-label">{{ t(link.textKey) }}</span>
             <span class="hero-link-tip">{{ link.tip }}</span>
           </a>
         </div>
@@ -45,32 +45,36 @@
 </template>
 
 <script setup>
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n({ useScope: "global" });
+
 const links = [
   {
     name: "LinkedIn",
     href: "https://www.linkedin.com/in/ruben-wambacq/",
-    text: "LinkedIn",
+    textKey: "header.links.linkedin",
     tip: "/ruben-wambacq/",
     icon: `<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.34 9.5H5.67V18h2.67V9.5zM7 6a1.55 1.55 0 1 0 0 3.1A1.55 1.55 0 0 0 7 6zm11.33 6.27c0-2.3-1.46-3.07-2.91-3.07a2.6 2.6 0 0 0-2.28 1.18h-.04V9.5h-2.56V18h2.67v-4.49c0-1.18.22-2.32 1.69-2.32 1.44 0 1.46 1.35 1.46 2.4V18h2.66l.01-5.73z"/></svg>`,
   },
   {
     name: "Github",
     href: "https://github.com/rwambacq",
-    text: "GitHub",
+    textKey: "header.links.github",
     tip: "/rwambacq/",
     icon: `<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49l-.01-1.9c-2.78.62-3.37-1.21-3.37-1.21-.46-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.36 1.12 2.94.85.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.35 4.8-4.58 5.05.36.32.68.94.68 1.9l-.01 2.82c0 .27.18.59.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg>`,
   },
   {
     name: "Email",
     href: "mailto:ruben.wambacq@gmail.com",
-    text: "Email",
+    textKey: "header.links.email",
     tip: "ruben.wambacq@gmail.com",
     icon: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>`,
   },
   {
     name: "Phone",
     href: "tel:+32471325437",
-    text: "Call",
+    textKey: "header.links.call",
     tip: "+32 471 32 54 37",
     icon: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`,
   },

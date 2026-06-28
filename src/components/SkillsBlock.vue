@@ -1,32 +1,32 @@
 <template>
   <section class="skills">
-    <p class="section-label">Skills</p>
+    <p class="section-label">{{ t("skills.label") }}</p>
 
     <div class="skills-grid">
       <div class="skills-group">
-        <h3 class="skills-group-title">Proficient with</h3>
+        <h3 class="skills-group-title">{{ t("skills.proficientTitle") }}</h3>
         <div class="skills-tags">
-          <span v-for="(p, i) in proficiencies" :key="i" class="skills-tag skills-tag--accent">{{ p }}</span>
+          <span v-for="(p, i) in tm('skills.proficiencies')" :key="i" class="skills-tag skills-tag--accent">{{ rt(p) }}</span>
         </div>
       </div>
 
       <div class="skills-group">
-        <h3 class="skills-group-title">Experience with</h3>
+        <h3 class="skills-group-title">{{ t("skills.experienceTitle") }}</h3>
         <div class="skills-tags">
-          <span v-for="(e, i) in experience" :key="i" class="skills-tag">{{ e }}</span>
+          <span v-for="(e, i) in tm('skills.experience')" :key="i" class="skills-tag">{{ rt(e) }}</span>
         </div>
       </div>
     </div>
 
     <div class="skills-languages">
-      <h3 class="skills-group-title">Languages</h3>
+      <h3 class="skills-group-title">{{ t("skills.languagesTitle") }}</h3>
       <div class="skills-languages-list">
         <ProgressBar
-          v-for="(language, i) in Object.keys(languages)"
+          v-for="(language, i) in languages"
           :key="i"
-          :value="languages[language]"
+          :value="language.value"
           :max="10"
-          :name="language"
+          :name="language.name"
         />
       </div>
     </div>
@@ -34,30 +34,20 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 import ProgressBar from "./visualisation/ProgressBar.vue";
 
-const proficiencies = [
-  "Vue.js",
-  "Javascript",
-  "Typescript",
-  "UI design",
-  "UX design",
-];
-const experience = [
-  "Mobile development",
-  "React Native",
-  "React",
-  "Angular",
-  "Ember",
-  "Python",
-  "SQL",
-  "Linked Data",
-];
-const languages = {
-  Dutch: 10,
-  English: 8.5,
-  French: 5.5,
-};
+const { t, tm, rt } = useI18n({ useScope: "global" });
+
+const languageValues = [10, 8.5, 5.5];
+
+const languages = computed(() =>
+  tm("skills.languages").map((name, index) => ({
+    name: rt(name),
+    value: languageValues[index],
+  }))
+);
 </script>
 
 <style lang="scss" scoped>

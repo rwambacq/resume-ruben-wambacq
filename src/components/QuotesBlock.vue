@@ -1,6 +1,6 @@
 <template>
   <section class="quotes">
-    <p class="section-label">References</p>
+    <p class="section-label">{{ t("references.label") }}</p>
     <div class="quotes-grid">
       <figure
         v-for="(reference, index) in references"
@@ -22,21 +22,20 @@
 </template>
 
 <script setup>
-const references = [
-  {
-    person: "Charles Boutens",
-    title: "CEO @ <a href='https://www.uman.ai/'>uman</a>",
-    quote:
-      "Ruben worked with us on developing the frontend application of uman.ai using vue.js. He is a really talented software engineer, you can see it in the speed at which he implements new features, while keeping his eye for detail. He wants things to be perfect and goes the extra mile if necessary. Clear communication and fun guy to work with all round. Also important: he can make some tasty burritos!",
-  },
-  {
-    person: "Rutger Bevers",
-    title:
-      "CEO @ <a href='https://www.conversationstarter.net/'>Conversation Starter</a>",
-    quote:
-      "Ruben has a broad technical skillset and the ability to improve skills, such as user interface design, very quickly. Ruben is also a sharp communicator, both inside the team as well as towards external stakeholders.",
-  },
-];
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { t, tm, rt } = useI18n({ useScope: "global" });
+
+const people = ["Charles Boutens", "Rutger Bevers"];
+
+const references = computed(() =>
+  tm("references.items").map((item, index) => ({
+    person: people[index],
+    title: rt(item.title),
+    quote: rt(item.quote),
+  }))
+);
 
 function initials(name) {
   return name
