@@ -134,6 +134,10 @@ const links = [
 <style lang="scss" scoped>
 .hero {
   position: relative;
+  // contain the decorative photo glow + hover tooltips so they never push
+  // horizontal page scroll on narrow screens. clip (not hidden) preserves the
+  // sticky nav and lets tooltips still overflow vertically.
+  overflow-x: clip;
   padding: 7rem 1.25rem 5rem;
 
   &-inner {
