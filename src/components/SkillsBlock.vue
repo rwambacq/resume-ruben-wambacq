@@ -36,7 +36,8 @@
 <script setup>
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import ProgressBar from "./visualisation/ProgressBar.vue";
+
+import ProgressBar from "./library/ProgressBar.vue";
 
 const { t, tm, rt } = useI18n({ useScope: "global" });
 
