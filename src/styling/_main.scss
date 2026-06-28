@@ -1,1 +1,35 @@
-@import './core/colors.scss'
+@import './core/colors.scss';
+
+// Shared layout helpers for content sections
+@mixin section {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 4.5rem 1.25rem;
+}
+
+@mixin section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 2rem;
+
+  &::before {
+    content: "";
+    width: 1.6rem;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.6;
+  }
+}
+
+@mixin card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}

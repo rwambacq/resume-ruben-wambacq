@@ -1,74 +1,63 @@
 <template>
   <div class="progress-bar">
-    <div v-if="name !== ''" class="progress-bar-name">
-      {{name}}
+    <div class="progress-bar-head">
+      <span v-if="name !== ''" class="progress-bar-name">{{ name }}</span>
     </div>
-    <div class="progress-bar-slider" v-visible="visibilityChanged">
-      <div class="progress-bar-slider-fill" :style="progressBarFill"></div>
+    <div class="progress-bar-track" v-visible="visibilityChanged">
+      <div class="progress-bar-fill" :style="progressBarFill"></div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'ProgressBar',
-  props: {
-    value: {
-      type: Number,
-      required: true
-    },
-    max: {
-      type: Number,
-      required: true
-    },
-    name: {
-      type: String,
-      default: ""
-    }
-  },
-  data() {
-    return {
-      canAnimate: false
-    }
-  },
-  computed: {
-    progressBarFill() {
-      const ratio = this.canAnimate ? Math.round((this.value / this.max) * 100) : 0
-      return `width: ${ratio}%`
-    }
-  },
-  methods: {
-    visibilityChanged(isVisible) {
-      this.canAnimate = isVisible;
-    }
-  }
+<script setup>
+import { ref, computed } from "vue";
+
+const props = defineProps({
+  value: { type: Number, required: true },
+  max: { type: Number, required: true },
+  name: { type: String, default: "" },
+});
+
+const canAnimate = ref(false);
+
+const progressBarFill = computed(() => {
+  const ratio = canAnimate.value
+    ? Math.round((props.value / props.max) * 100)
+    : 0;
+  return `width: ${ratio}%`;
+});
+
+function visibilityChanged(isVisible) {
+  if (isVisible) canAnimate.value = true;
 }
 </script>
 
 <style lang="scss" scoped>
 .progress-bar {
-  display: grid;
-  grid-template-columns: 30% auto;
-
-  &-name {
-    text-align: start;
+  &-head {
     display: flex;
-    align-items: center;
+    margin-bottom: 0.45rem;
   }
 
-  &-slider {
-    border: 2px solid $accent-light;
-    height: 1rem;
-    border-radius: 4px;
-    padding: 2px;
+  &-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text);
+  }
 
-    &-fill {
-      height: 100%;
-      background: $accent-light;
-      filter: brightness(.7);
-      border-radius: 2px;
-      transition: width 1s ease;
-    }
+  &-track {
+    height: 8px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  &-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+    transition: width 1.1s cubic-bezier(0.22, 1, 0.36, 1);
   }
 }
 </style>

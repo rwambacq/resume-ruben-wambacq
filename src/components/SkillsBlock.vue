@@ -1,131 +1,121 @@
 <template>
-  <div class="skills">
-    <h1>Skills</h1>
-    <div class="skills-block">
-      <div class="skills-block-proficiencies">
-        <h2>Proficiencies</h2>
-        <ul>
-          <li v-for="(proficiency, index) in proficiencies" :key="index" class="skills-block-proficiencies-item">{{proficiency}}</li>
-        </ul>
+  <section class="skills">
+    <p class="section-label">Skills</p>
+
+    <div class="skills-grid">
+      <div class="skills-group">
+        <h3 class="skills-group-title">Proficient with</h3>
+        <div class="skills-tags">
+          <span v-for="(p, i) in proficiencies" :key="i" class="skills-tag skills-tag--accent">{{ p }}</span>
+        </div>
       </div>
-      <div class="skills-block-experiences">
-        <h2>Experience</h2>
-        <ul>
-          <li v-for="(experience, index) in experience" :key="index" class="skills-block-experiences-item">{{experience}}</li>
-        </ul>
+
+      <div class="skills-group">
+        <h3 class="skills-group-title">Experience with</h3>
+        <div class="skills-tags">
+          <span v-for="(e, i) in experience" :key="i" class="skills-tag">{{ e }}</span>
+        </div>
       </div>
     </div>
-    <h2>Languages</h2>
+
     <div class="skills-languages">
-      <div v-for="(language, index) in Object.keys(languages)" :key="index">
-        <ProgressBar :value="languages[language]" :max="10" :name="language" class="skills-languages-item"/>
+      <h3 class="skills-group-title">Languages</h3>
+      <div class="skills-languages-list">
+        <ProgressBar
+          v-for="(language, i) in Object.keys(languages)"
+          :key="i"
+          :value="languages[language]"
+          :max="10"
+          :name="language"
+        />
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
-<script>
-import ProgressBar from './visualisation/ProgressBar.vue'
+<script setup>
+import ProgressBar from "./visualisation/ProgressBar.vue";
 
-export default {
-  name: "SkillsBlock",
-  components: {ProgressBar},
-  data() {
-    return {
-      proficiencies: ["Web Development", "Design", "Styling", "Scripting Languages"],
-      experience: ["Data Science", "Java", "C/C++", "Android development", "SQL/NoSQL Databases", "Linked Data"],
-      languages: { // With a score /10 of skill level
-        Dutch: 10,
-        English: 8.5,
-        French: 5.5
-      },
-      visible: false
-    }
-  },
-  methods: {
-    visibilityChanged(isVisible, entry) {
-      this.visible = isVisible;
-    }
-  }
-}
+const proficiencies = [
+  "Vue.js",
+  "Javascript",
+  "Typescript",
+  "UI design",
+  "UX design",
+];
+const experience = [
+  "Mobile development",
+  "React Native",
+  "React",
+  "Angular",
+  "Ember",
+  "Python",
+  "SQL",
+  "Linked Data",
+];
+const languages = {
+  Dutch: 10,
+  English: 8.5,
+  French: 5.5,
+};
 </script>
 
 <style lang="scss" scoped>
-
 .skills {
-  text-align: center;
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
+  @include section;
+
+  .section-label { @include section-label; }
+
+  &-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2.5rem;
+  }
+
+  &-group-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+
+  &-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  &-tag {
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    &--accent {
+      background: var(--accent-soft);
+      border-color: transparent;
+      color: var(--accent-strong);
+    }
+  }
 
   &-languages {
-    width: 50%;
-    margin: 2rem;
+    margin-top: 3rem;
 
-    &-item {
-      margin: .4rem;
+    &-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      width: 100%;
     }
   }
-
-  &-block {
-    width: 60%;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-evenly;
-    text-align: start;
-
-    & > * {
-      & ul {
-        margin-top: 1rem;
-      }
-    }
-
-    &-proficiencies {
-      &-item {
-        padding: .2rem;
-
-        &::before {
-          content: "\2022";
-          color: $accent-light;
-          font-weight: bold;
-          display: inline-block;
-          width: 1em;
-          margin-left: -1em;
-        }
-      }
-    }
-
-    &-experiences {
-      &-item {
-        padding: .2rem;
-
-        &::before {
-          content: "\2022";
-          color: $accent-light;
-          font-weight: bold;
-          display: inline-block;
-          width: 1em;
-          margin-left: -1em;
-        }
-      }
-    }
-  }
-}
-
-h1 {
-  color: $accent-light;
-  font-size: 1.8rem;
-  font-weight: 500;
-}
-
-h2 {
-  width: 60%;
-  text-align: left;
-  font-size: 1.7rem;
-  font-weight: 500;
-
-  width: 100%;
-  text-align: center;
-  padding: 2rem 0 0 0;
 }
 </style>

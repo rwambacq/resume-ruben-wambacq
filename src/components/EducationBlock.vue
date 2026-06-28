@@ -1,68 +1,80 @@
 <template>
-  <div class="education-wrapper">
-    <h1>Education</h1>
-    <div class="education-list">
-      <div class="education">
-        <p class="education-kind">Bachelor of Science</p>
-        <p class="education-major">Informatics</p>
-        <p class="education-location">Ghent University</p>
-        <p class="education-duration">2016 - 2020</p>
-      </div>
-      <div class="education">
-        <p class="education-kind">Master of Science</p>
-        <p class="education-major">Informatics</p>
-        <p class="education-location">Ghent University</p>
-        <p class="education-duration">2020 - 2022</p>
+  <section class="education">
+    <p class="section-label">Education</p>
+    <div class="education-grid">
+      <div v-for="(item, index) in items" :key="index" class="education-card">
+        <p class="education-duration">{{ item.duration }}</p>
+        <h3 class="education-kind">{{ item.kind }}</h3>
+        <p class="education-major">{{ item.major }}</p>
+        <p class="education-location">{{ item.location }}</p>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
-<script>
-export default {
-  name: "EducationBlock"
-}
+<script setup>
+const items = [
+  {
+    kind: "Bachelor of Science",
+    major: "Informatics",
+    location: "Ghent University",
+    duration: "2016 — 2020",
+  },
+  {
+    kind: "Master of Science",
+    major: "Informatics",
+    location: "Ghent University",
+    duration: "2020 — 2022",
+  },
+];
 </script>
 
 <style lang="scss" scoped>
-  .education-wrapper {
-    text-align: center;
+.education {
+  @include section;
+
+  .section-label { @include section-label; }
+
+  &-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
   }
 
-  h1 {
-    color: $accent-light;
-    font-size: 1.8rem;
-    font-weight: 500;
-  }
+  &-card {
+    @include card;
+    padding: 1.6rem;
+    transition: transform 0.2s ease, border-color 0.2s ease;
 
-  .education-list {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-    column-gap: 10rem;
-    row-gap: 2rem;
-  }
-
-  .education {
-    margin: 2rem 1rem;
-    line-height: 1.5rem;
-
-    &-kind {
-      font-size: 1.2rem;
-      color: $grey-lightest;
-    }
-
-    &-major {
-      font-size: 1.15rem;
-      color: rgba($accent-light, 0.6);
-    }
-
-    &-location {
-      font-weight: 100;
-    }
-
-    &-duration {
-      color: $grey-normal;
+    &:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
     }
   }
+
+  &-duration {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    margin-bottom: 0.7rem;
+  }
+
+  &-kind {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  &-major {
+    color: var(--text-muted);
+    margin-top: 0.15rem;
+  }
+
+  &-location {
+    margin-top: 0.6rem;
+    font-size: 0.9rem;
+    color: var(--text-faint);
+  }
+}
 </style>
