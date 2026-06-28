@@ -5,6 +5,7 @@ export default {
     skills: "Skills",
     hobbies: "Hobbies",
     references: "References",
+    menu: "Toggle menu",
   },
   theme: {
     toLight: "Switch to light mode",

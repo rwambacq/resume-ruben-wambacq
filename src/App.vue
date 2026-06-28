@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <nav class="nav">
+    <nav class="nav" ref="navRoot">
       <div class="nav-inner">
         <span class="nav-brand" @click="scrollToTop">RW</span>
         <div class="nav-links">
@@ -16,18 +16,35 @@
           <Dropdown
             icon="globe"
             :aria-label="t('app.language.label')"
-            :model-value="locale"
+            :model-value="app.locale"
             :options="localeOptions"
-            @update:model-value="changeLocale"
+            @update:model-value="app.changeLocale"
           >
-            <template #trigger>{{ locale.toUpperCase() }}</template>
+            <template #trigger>{{ app.locale.toUpperCase() }}</template>
           </Dropdown>
           <Button
-            :icon="theme === 'light' ? 'moon' : 'sun'"
-            :aria-label="theme === 'light' ? t('app.theme.toDark') : t('app.theme.toLight')"
-            @click="toggleTheme"
+            :icon="app.theme === 'light' ? 'moon' : 'sun'"
+            :aria-label="app.theme === 'light' ? t('app.theme.toDark') : t('app.theme.toLight')"
+            @click="app.toggleTheme"
           />
+          <div class="nav-burger">
+            <Button
+              :icon="mobileMenuOpen ? 'xmark' : 'bars'"
+              :aria-label="t('app.nav.menu')"
+              :aria-expanded="mobileMenuOpen"
+              @click="mobileMenuOpen = !mobileMenuOpen"
+            />
+          </div>
         </div>
+      </div>
+      <div v-if="mobileMenuOpen" class="nav-mobile">
+        <span
+          v-for="block in blocks"
+          :key="block.key"
+          class="nav-mobile-link"
+          @click="scrollToBlock(block.key)"
+          >{{ t(`app.nav.${block.key}`) }}</span
+        >
       </div>
     </nav>
 
@@ -48,9 +65,9 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { useI18n } from "vue-i18n";
-import { SUPPORTED_LOCALES, setLocale } from "./locales";
+import { useAppStore } from "./stores/app";
 
 import Button from "./components/library/Button.vue";
 import Dropdown from "./components/library/Dropdown.vue";
@@ -61,7 +78,8 @@ import SkillsBlock from "./components/SkillsBlock.vue";
 import HobbyBlock from "./components/HobbyBlock.vue";
 import QuotesBlock from "./components/QuotesBlock.vue";
 
-const { t, locale } = useI18n({ useScope: "global" });
+const { t } = useI18n({ useScope: "global" });
+const app = useAppStore();
 
 const blocks = [
   { key: "education" },
@@ -79,34 +97,39 @@ const references = ref(null);
 
 const blockRefs = { education, experience, skills, hobbies, references };
 
-const theme = ref("light");
+const navRoot = ref(null);
+const mobileMenuOpen = ref(false);
 
-function toggleTheme() {
-  theme.value = theme.value === "light" ? "dark" : "light";
-  document.documentElement.setAttribute("data-theme", theme.value);
-  localStorage.setItem("theme", theme.value);
+function handleClickOutside(event) {
+  if (
+    mobileMenuOpen.value &&
+    navRoot.value &&
+    !navRoot.value.contains(event.target)
+  ) {
+    mobileMenuOpen.value = false;
+  }
 }
 
 const localeOptions = computed(() =>
-  SUPPORTED_LOCALES.map((code) => ({
+  app.supportedLocales.map((code) => ({
     value: code,
     label: code.toUpperCase(),
     description: t(`common.languages.${code}`),
   }))
 );
 
-function changeLocale(code) {
-  setLocale(code);
-}
-
 onMounted(() => {
-  const stored = localStorage.getItem("theme");
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  theme.value = stored || (prefersDark ? "dark" : "light");
-  document.documentElement.setAttribute("data-theme", theme.value);
+  app.initTheme();
+  app.initLocale();
+  document.addEventListener("click", handleClickOutside);
 });
 
+onBeforeUnmount(() =>
+  document.removeEventListener("click", handleClickOutside)
+);
+
 function scrollToBlock(key) {
+  mobileMenuOpen.value = false;
   const element = blockRefs[key].value.$el;
   element.scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -186,6 +209,32 @@ function scrollToTop() {
     align-items: center;
     gap: 0.6rem;
   }
+
+  &-burger {
+    display: none;
+  }
+
+  &-mobile {
+    display: flex;
+    flex-direction: column;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0.4rem 1.25rem 1rem;
+    border-top: 1px solid var(--border);
+
+    &-link {
+      padding: 0.7rem 0;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: var(--text);
+      }
+    }
+  }
 }
 
 .app-content > * {
@@ -200,12 +249,12 @@ function scrollToTop() {
   font-size: 0.82rem;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 750px) {
   .nav-links {
-    gap: 1rem;
+    display: none;
   }
-  .nav-link {
-    font-size: 0.8rem;
+  .nav-burger {
+    display: inline-flex;
   }
 }
 </style>

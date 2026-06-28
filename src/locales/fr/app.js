@@ -5,6 +5,7 @@ export default {
     skills: "Compétences",
     hobbies: "Loisirs",
     references: "Références",
+    menu: "Ouvrir le menu",
   },
   theme: {
     toLight: "Passer en mode clair",
